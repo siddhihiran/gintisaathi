@@ -1,0 +1,55 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Manrope:wght@400;500;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Colour palette */
+  --bg-paper: #F6F0E6;        /* warm parchment */
+  --bg-ink: #13233A;          /* deep navy */
+  --color-marigold: #E6A23C;  /* muted marigold */
+  --color-indigo: #4257A7;    /* indigo */
+  --color-sage: #668A72;      /* sage */
+  --color-soft-red: #C44747;  /* soft red for warnings */
+
+  /* Typography */
+  --font-headline: 'DM Serif Display', serif;
+  --font-body: 'Manrope', sans-serif;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--bg-paper);
+  color: var(--bg-ink);
+  font-family: var(--font-body);
+  overflow-x: hidden;
+}
+
+/* Custom smooth scrollbars */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0a1128;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #1d326f;
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #2c4794;
+}
+
+/* Glassmorphism utility classes */
+.glass-panel {
+  background: rgba(10, 17, 40, 0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
