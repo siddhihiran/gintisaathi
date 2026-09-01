@@ -7,7 +7,7 @@
     "dev:frontend": "vite",
     "dev:backend": "tsx watch server/index.ts",
     "dev": "concurrently -n \"frontend,backend\" -c \"cyan,magenta\" \"vite\" \"tsx watch server/index.ts\"",
-    "build": "tsc -b && vite build && cp -r dist/assets ./assets && cp index.html dist/index.html",
+    "build": "tsc -b && vite build",
     "preview": "vite preview",
     "start": "tsx server/index.ts"
   },

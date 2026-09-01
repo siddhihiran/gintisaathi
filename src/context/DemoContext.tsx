@@ -23,6 +23,11 @@ interface DemoContextType {
   markAiGuideUsed: () => void;
   markMythChecked: () => void;
   resetScore: () => void;
+  // Passport
+  passportData: Record<string, unknown> | null;
+  passportLoading: boolean;
+  passportError: string | null;
+  generatePassport: (payload: Record<string, unknown>) => Promise<void>;
 }
 
 const DemoContext = createContext<DemoContextType | undefined>(undefined);

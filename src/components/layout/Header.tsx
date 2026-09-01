@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useLanguage } from '../../context/LanguageContext';
 import { SUPPORTED_LANGUAGES } from '../../types/language';
 import { useDemo } from '../../context/DemoContext';
-import { ShieldCheck, Globe, Menu, X, ChevronDown, Sparkles, Building2, HelpCircle, BarChart3, Clock } from 'lucide-react';
+import { ShieldCheck, Globe, ChevronDown } from 'lucide-react';
 import { CENSUS_CONSTANTS } from '../../data/constants';
 
 interface HeaderProps {
@@ -11,12 +11,11 @@ interface HeaderProps {
   onOpenPrivacy: () => void;
 }
 
-export const Header: React.FC<HeaderProps> = ({ activeTab, setActiveTab, onOpenPrivacy }) => {
+export const Header: React.FC<HeaderProps> = ({ setActiveTab, onOpenPrivacy }) => {
   const { language, setLanguage, t, currentLanguageOption } = useLanguage();
   const { markLanguageSelected } = useDemo();
   const [isLangMenuOpen, setIsLangMenuOpen] = useState(false);
 
-  // Minimal header: logo, language selector, privacy button
   return (
     <header className="sticky top-0 z-40 bg-ink-900/90 backdrop-blur-xl border-b border-ink-800/80 transition-all duration-300">
       {/* Top micro alert strip */}
@@ -28,17 +27,21 @@ export const Header: React.FC<HeaderProps> = ({ activeTab, setActiveTab, onOpenP
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-18">
+        <div className="flex items-center justify-between h-18 py-3">
           {/* Brand / Logo */}
           <div
             onClick={() => { setActiveTab('home'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
             className="flex items-center gap-3 cursor-pointer group select-none"
+            role="button"
+            aria-label="Go to home"
+            tabIndex={0}
+            onKeyDown={(e) => { if (e.key === 'Enter') { setActiveTab('home'); window.scrollTo({ top: 0, behavior: 'smooth' }); } }}
           >
             <div className="relative flex items-center justify-center w-11 h-11 rounded-xl bg-gradient-to-br from-marigold-500 via-indigo-600 to-sage-500 p-[2px] shadow-glow-saffron group-hover:scale-105 transition-transform duration-200">
               <div className="w-full h-full bg-ink-950 rounded-[10px] flex items-center justify-center text-marigold-400 font-bold text-xl">
-                <span>२७</span>
+                <span aria-hidden="true">२७</span>
               </div>
-              <div className="absolute -bottom-1 -right-1 w-4 h-4 rounded-full bg-sage-500 border-2 border-ink-950 flex items-center justify-center text-[8px] text-white">✓</div>
+              <div className="absolute -bottom-1 -right-1 w-4 h-4 rounded-full bg-sage-500 border-2 border-ink-950 flex items-center justify-center text-[8px] text-white" aria-hidden="true">✓</div>
             </div>
             <div>
               <div className="flex items-center gap-2">
@@ -57,20 +60,30 @@ export const Header: React.FC<HeaderProps> = ({ activeTab, setActiveTab, onOpenP
                 onClick={() => setIsLangMenuOpen(!isLangMenuOpen)}
                 className="flex items-center gap-2 px-3 py-2 rounded-xl bg-ink-900/90 hover:bg-ink-800 border border-ink-700/80 text-xs sm:text-sm font-medium text-slate-200 hover:text-white transition-all shadow-sm"
                 aria-label="Select Language"
+                aria-expanded={isLangMenuOpen}
+                aria-haspopup="listbox"
               >
-                <Globe className="w-4 h-4 text-sage-400" />
+                <Globe className="w-4 h-4 text-sage-400" aria-hidden="true" />
                 <span className="font-semibold">{currentLanguageOption.nativeLabel}</span>
-                <ChevronDown className={`w-3.5 h-3.5 text-slate-400 transition-transform duration-200 ${isLangMenuOpen ? 'rotate-180' : ''}`} />
+                <ChevronDown className={`w-3.5 h-3.5 text-slate-400 transition-transform duration-200 ${isLangMenuOpen ? 'rotate-180' : ''}`} aria-hidden="true" />
               </button>
 
               {isLangMenuOpen && (
                 <>
-                  <div className="fixed inset-0 z-10" onClick={() => setIsLangMenuOpen(false)} />
-                  <div className="absolute right-0 mt-2 w-52 rounded-2xl bg-ink-900 border border-ink-700 shadow-2xl p-1.5 z-20 animate-in fade-in zoom-in-95 duration-150">
-                    <div className="px-3 py-1.5 text-[11px] font-semibold text-slate-400 uppercase tracking-wider border-b border-ink-800 mb-1">{t.nav.selectLang}</div>
+                  <div className="fixed inset-0 z-10" onClick={() => setIsLangMenuOpen(false)} aria-hidden="true" />
+                  <div
+                    className="absolute right-0 mt-2 w-52 rounded-2xl bg-ink-900 border border-ink-700 shadow-2xl p-1.5 z-20 animate-in fade-in zoom-in-95 duration-150"
+                    role="listbox"
+                    aria-label="Choose language"
+                  >
+                    <div className="px-3 py-1.5 text-[11px] font-semibold text-slate-400 uppercase tracking-wider border-b border-ink-800 mb-1">
+                      {t.nav.selectLang}
+                    </div>
                     {SUPPORTED_LANGUAGES.map((lang) => (
                       <button
                         key={lang.code}
+                        role="option"
+                        aria-selected={language === lang.code}
                         onClick={() => {
                           setLanguage(lang.code);
                           setIsLangMenuOpen(false);
@@ -83,7 +96,7 @@ export const Header: React.FC<HeaderProps> = ({ activeTab, setActiveTab, onOpenP
                         }`}
                       >
                         <span className="flex items-center gap-2">
-                          <span>{lang.flag}</span>
+                          <span aria-hidden="true">{lang.flag}</span>
                           <span>{lang.nativeLabel}</span>
                         </span>
                         <span className="text-[11px] text-slate-400">({lang.label})</span>
@@ -99,43 +112,13 @@ export const Header: React.FC<HeaderProps> = ({ activeTab, setActiveTab, onOpenP
               onClick={onOpenPrivacy}
               className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-ink-900/90 hover:bg-ink-800 border border-ink-700/80 text-xs sm:text-sm font-medium text-civic-emerald-400 hover:text-civic-emerald-300 transition-all shadow-sm"
               title="Privacy & Safety Guidelines"
+              aria-label="Open Privacy and Safety Guidelines"
             >
-              <ShieldCheck className="w-4 h-4 text-civic-emerald-400" />
+              <ShieldCheck className="w-4 h-4 text-civic-emerald-400" aria-hidden="true" />
               <span className="hidden sm:inline">{t.nav.privacy}</span>
             </button>
           </div>
         </div>
-              
-                const Icon = item.icon;
-                const isActive = activeTab === item.id;
-                return (
-                  <button
-                    key={item.id}
-                    onClick={() => {
-                      setActiveTab(item.id);
-                      setIsMobileNavOpen(false);
-                    }}
-                    className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-colors ${
-                      isActive
-                        ? 'bg-gradient-to-r from-civic-blue-600 to-civic-teal-600 text-white'
-                        : 'text-slate-300 hover:bg-navy-900 hover:text-white'
-                    }`}
-                  >
-                    <Icon className={`w-5 h-5 ${isActive ? 'text-white' : 'text-civic-saffron-400'}`} />
-                    <span>{item.label}</span>
-                  </button>
-                );
-              })}
-              
-              <div className="pt-2 mt-2 border-t border-navy-800/80 flex items-center justify-between px-2 text-xs text-slate-400">
-                <span>{t.footer.censusHelpline}:</span>
-                <a href={`tel:${CENSUS_CONSTANTS.OFFICIAL_HELPLINE_TOLL_FREE}`} className="text-civic-saffron-400 font-bold hover:underline">
-                  {CENSUS_CONSTANTS.OFFICIAL_HELPLINE_TOLL_FREE}
-                </a>
-              </div>
-            </div>
-          </div>
-        )}
       </div>
     </header>
   );
